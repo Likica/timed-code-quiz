@@ -4,18 +4,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Timed Code Quiz</title>
+    <title align='center'>Timed Code Quiz</title>
     <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 
 <body>
 
     <header>
-
+        <!-- add hs link and time clock countdown -->
+        <a id='view_hs_link' href='#'>View Highscores</a>
+        <span id='time'>Time: <span id='time_display'>0</span></span>
     </header>
 
+    <main>
+        <section id='start_page' class='page'>
+            <h1>Welcome to Timed Code Quiz!</h1>
+            <p>Let's see how you do in this quick knowledge check! Good Luck and beware- each incorrect answer will
+                deduct 10s of yout time!</p>
+            <!-- add start quiz button -->
+            <button id='start_quiz_btn'>Start Quiz</button>
+        </section>
 
+        <!-- add questions box and class page hidden so we can use it in js to hide page -->
+        <div id='questions_box'></div>
+        <section id='questions_pg' class='page hidden'>
+            <!-- add section part for questions to display -->
+            <h2 id='question_display'></h2>
+            <!-- add section part for answers list to display -->
+            <div id='answer_list'></div>
+            <!-- use thematic break  -->
+            <hr>
+            <!-- add section part for feedback to display -->
+            <div id='answer_feedback'>Correct!✅</div>
+        </section>
 
+        <!-- Enter Your Initials section setup start -->
+        <section id='get_initials_pg' class='page hidden'>
+            <h2>Quiz has ended!</h2>
+            <p>Your final score is <span id='score_display'></span></p>
+            <!-- additional space-break -->
+            <br>
+            <!-- initials input box/submit button -->
+            <p>Enter Your Initials:
+                <input type='text' name='initials' id='initials_input'>
+                <button id='submit_initials_btn'>Submit</button>
+            </p>
+        </section>
+        <!-- Enter Your Initials section setup end -->
+
+        <!-- Highscores section setup start -->
+        <section id='hs_pg' class='page hidden'>
+            <h2>Highscores</h2>
+            <!-- div for list of highscores to save -->
+            <div id='highscore_list'></div>
+            <!-- return/start button that goes back to beginning -->
+            <button id='go_to_start_pg_btn'>Go Back</button>
+            <!-- Clear highscores button  -->
+            <button id='clear_hs_btn'>Clear All Highscores</button>
+            <!-- Highscores section setup end -->
+        </section>
+    </main>
     <script src='./assets/js/code.js'></script>
 </body>
 

@@ -1,0 +1,41 @@
+/* used to control the primary layout of the whole page */
+html{
+    min-height:100vh;
+    scroll-behavior: smooth;
+}
+body {
+  min-height: 100%;
+  display:flex;
+  flex-direction:column;  
+  line-height: 1;
+  font-family: 'Courier New', Courier, monospace;
+}
+/* include every immediate child of the body tag*/
+body >* {
+flex: 0 0 auto;
+width: 100%;
+}
+/* "flex:1" sets how a flex item will grow or shrink to fit the space available in its flex container*/
+main{
+    flex: 1 auto;
+}
+/* bodu layout*/
+body{
+    height: 100 vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+ol, ul {
+    list-style: none;
+}
+/* set up hidden elements to be hidden when needed*/
+.hidden{
+    display: none !important;
+}
+
+/*Button styling start*/
+button{
+    
+}
