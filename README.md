@@ -1,7 +1,7 @@
 <h1 align='center'>Timed Code Quiz</h1>
   
   ### By likica * [Email me](mailto:fahrija_wyroski@live.com) * 
-  * [Deployed Appplication](https://www.github.com/likica.io/timed-code-quiz)
+  * [Deployed Appplication](https://likica.github.io/timed-code-quiz/)
  
   ## Table of contents
   * [Description](#Description)
