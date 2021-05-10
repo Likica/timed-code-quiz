@@ -1,15 +1,16 @@
 /* used to control the primary layout of the whole page */
-html{
+/* html{
     min-height:100vh;
     scroll-behavior: smooth;
     background-color: lightgrey;
-}
+} */
 body {
   min-height: 100%;
   display:flex;
   flex-direction:column;  
   line-height: 1;
   font-family: 'Courier New', Courier, monospace;
+  background-color: lightgray;
 }
 /* include every immediate child of the body tag*/
 body >* {
@@ -57,6 +58,7 @@ button:hover{
 /*Button styling end*/
 a {
     color: green;
+    padding: 5px 5px ;
 }
 
 header {
@@ -74,6 +76,11 @@ main {
 main section h1 {
     font-size: 2rem;
     margin: 1rem 0;
+    text-align: center;
+    border:mediumaquamarine;
+    border-style: double;
+    border-width: 8px;
+    
 }
 
 main section h2 {
@@ -84,6 +91,10 @@ margin: 1rem 0;
 main section p {
     font-size: 1.25rem;
     margin: 1rem 0;
+    text-align: center;
+    border:rgb(226, 232, 122);
+    border-style:groove;
+    border-width: 8px;
 }
 
 main section hr {
@@ -121,10 +132,11 @@ main #questions_box span.wrong {
 
 main #questions_pg #answer_list {
     display: inline-flex;
-    flex-direction: column;
+    flex-direction:row repeat(2);
     align-items: flex-start;
 }
 
 main #questions_pg #answer_list button {
     margin: 0.1rem;
+    /* padding: 3px; */
 }
