@@ -3,93 +3,116 @@ var main = document.getElementsByTagName('main')[0];
 
 var viewHsLink = document.getElementById('view_hs_link');
 var timeDisplay = document.getElementById('time_display');
-var startQuizButton = document.getElementById('start_quiz_btn');
+var startQuizBtn = document.getElementById('start_quiz_btn');
 var questionsBox = document.getElementById('questions_box');
 var questionDisplay = document.getElementById('question_display');
 var answerList = document.getElementById('answer_list');
 var answerFeedback = document.getElementById('answer_feedback');
 var scoreDisplay = document.getElementById('score_display');
 var initialsInput = document.getElementById('initials_input');
-var submitInitialsButton = document.getElementById('submit_initials_btn');
+var submitInitialsBtn = document.getElementById('submit_initials_btn');
 var hsList = document.getElementById('highscore_list');
-var goToStartPageButton = document.getElementById('go_to_start_pg_btn');
-var clearHighscoresButton = document.getElementById('clear_hs_btn');
+var goToStartPageBtn = document.getElementById('go_to_start_pg_btn');
+var clearHighscoresBtn = document.getElementById('clear_hs_btn');
 
 // list of questions/answers for the player - total of 10 questions
 const questions = [
     {
-        'question': "A very useful tool used during development and debugging for printing content to the debugger is:",
-        'answers': ["terminal/bash", "JavaScript", "Debugger", "console.log"],
+        'question': 'A very useful tool used during development and debugging for printing content to the debugger is:',
+        'answers': ['terminal/bash', 'JavaScript', 'Debugger', 'console.log'],
         'correct_index': 3
     },
     {
-        'question': "Which program is used by web clients to view web pages?",
-        'answers': ["Protocol", "Web Browser", "Web Server", "Search Engine"],
+        'question': 'Which program is used by web clients to view web pages?',
+        'answers': ['Protocol', 'Web Browser', 'Web Server', 'Search Engine'],
         'correct_index': 1
     },
     {
-        'question': "Commonly used data types DO NOT include:",
-        'answers': ["Atrings", "Booleans", "Alerts", "Numbers"],
+        'question': 'Commonly used data types DO NOT include:',
+        'answers': ['Strings', 'Booleans', 'Alerts', 'Numbers'],
         'correct_index': 2
     },
     {
-        'question': "Arrays in JavaScript can be used to store _________",
-        'answers': ["Numbers and strings", "Booleans", "Other Arrays", "All of the above"],
+        'question': 'Arrays in JavaScript can be used to store _________',
+        'answers': ['Numbers and strings', 'Booleans', 'Other Arrays', 'All of the above'],
         'correct_index': 3
     },
     {
-        'question': "String values must be enclosed within ______ when being assigned to variables.",
-        'answers': ["Quotes", "Curly Brackets", "Commas", "Parenthesis"],
+        'question': 'String values must be enclosed within ______ when being assigned to variables.',
+        'answers': ['Quotes', 'Curly Brackets', 'Commas', 'Parenthesis'],
         'correct_index': 0
     },
     {
-        'question': "The condition in an 'if/else' statement is enclosed within _________.",
-        'answers': ["Quotes", "Curly Brackets", "Parenthesis", "Square Brackets"],
+        'question': 'The condition in an "if/else" statement is enclosed within _________.',
+        'answers': ['Quotes', 'Curly Brackets', 'Parenthesis', 'Square Brackets'],
         'correct_index': 2
     },
     {
-        'question': "The three equal signs '===' comparison is operator is used for comparing ___________.",
-        'answers': ["Values and Types", "Types", "numbers and Strings", "Values"],
+        'question': 'The three equal signs "===" comparison is operator is used for comparing ___________.',
+        'answers': ['Values and Types', 'Types', 'numbers and Strings', 'Values'],
         'correct_index': 0
     },
     {
-        'question': "The '________' keyword is a reference to the current object, whose method is being called upon",
-        'answers': ["These", "Object", "This", "Propery Of"],
+        'question': 'The "________" keyword is a reference to the current object, whose method is being called upon',
+        'answers': ['These', 'Object', 'This', 'Propery Of'],
         'correct_index': 0
     },
     {
-        'question': "Which are used with a tag to modify its function?",
-        'answers': ["Files", "Attributes", "Functions", "Documents"],
+        'question': 'Which are used with a tag to modify its function?',
+        'answers': ['Files', 'Attributes', 'Functions', 'Documents'],
         'correct_index': 1
     },
     {
-        'question': "HTML document should begin with the ______",
-        'answers': ["<HEAD> tag", "<TITLE> tag", "<BODY> tag", "<HTML> tag"],
+        'question': 'HTML document should begin with the ______',
+        'answers': ['<HEAD> tag', '<TITLE> tag', '<BODY> tag', '<HTML> tag'],
         'correct_index': 3
     }
 ]
 
 // time given to players
-const startingTime = questions.length * 10
+const startTime = questions.length * 10
 // Penalty - time deduction of 10 sec per incorrect answer
 const timePenalty = 10
 // countdown clock
 var remainingTime
 // timer
-var time
+var timer
 // number of correct answers
 var score
 
+// timer function
+function startTimer() {
+    remainingTime = startTime
+    timeDisplay.textContent = formatSeconds(remainingTime)
+
+    timer = setInterval(function () {
+        remainingTime--
+        // if time runs out, end and bring the initals page up
+        if (remainingTime < 0) {
+            clearInterval(timer)
+            displayInitialsPage()
+        } else {
+            timeDisplay.textContent = formatSeconds(remainingTime)
+        }
+    }, 1000)
+}
+
+// format time in seconds
+function formatSeconds(seconds) {
+    let m = Math.floor(seconds / 60).toString().padStart(2, '');
+    let s = (seconds % 60).toString().padStart(2, '0');
+    return `${m}:${s}`
+}
 
 // function to initialize the quiz
 function startQuiz() {
     // add event listener for startQuizBtn
-    startQuizButton.addEventListener('click', function (event) {
+    startQuizBtn.addEventListener('click', function (event) {
         //The preventDefault() method cancels the event if it is cancelable, meaning that the default action that belongs to the event will not occur.
         event.preventDefault()
         displayQuestionPg()
     })
-    //check user answers
+    //check player answers, add points for correct, or deduct time for incorrect answers
     answerList.addEventListener('click', function (event) {
         event.preventDefault()
         if (event.target.matches('button')) {
@@ -108,13 +131,17 @@ function startQuiz() {
         }
     })
 
-    // add eventListener with localStorage for initials user input
-    submitInitialsButton.addEventListener('click', function (event) {
+    // add eventListener with localStorage for initials player input
+    submitInitialsBtn.addEventListener('click', function (event) {
         event.preventDefault()
-        var initials = initialsInput.nodeValue.toUpperCase()
+        var initials = initialsInput.value.toUpperCase()
+        // if no initials are entered, prompt player for initials
+        if (!initials) {
+            window.alert("Please enter your intitials")
+        }
         if (initials) {
             var highscores = JSON.parse(localStorage.getItem('highscores')) || []
-
+            // add time, hs and push to localStorage
             timeStamp = Date.now()
             highscores.push({
                 'timeStamp': timeStamp,
@@ -122,7 +149,7 @@ function startQuiz() {
                 'initials': initials,
                 'timeRemaining': remainingTime
             })
-
+            // sort hs
             highscores = highscores.sort(function (a, b) {
                 if (a.score != b.score) return b.score - a.score
                 if (a.timeRemaining != b.timeRemaining) return b.timeRemaining - a.timeRemaining
@@ -137,12 +164,12 @@ function startQuiz() {
         }
     })
     // return to start page
-    goToStartPageButton.addEventListener('click', function (event) {
+    goToStartPageBtn.addEventListener('click', function (event) {
         event.preventDefault()
         displayStartPg()
     })
     //clear highscores that are saved in localStorage
-    clearHighscoresButton.addEventListener('click', function (event) {
+    clearHighscoresBtn.addEventListener('click', function (event) {
         var confirmed = confirm('Do you want to clear all of your highscores?')
         if (confirmed) {
             event.preventDefault()
@@ -162,7 +189,7 @@ function startQuiz() {
 
 // display/hide pages function by id
 function displayPage(id) {
-    main.querySelectorAll('.page').forEach(function (page) {
+    main.querySelectorAll('.page').forEach(page => {
         if (page.id == id) {
             page.classList.remove('hidden')
         } else {
@@ -175,12 +202,12 @@ function displayPage(id) {
 // function to display the start page
 function displayStartPg() {
     displayPage('start_page')
-
-    clearInterval(time)
+    // need to clear previous stage of pages
+    clearInterval(timer)
     remainingTime = 0
     timeDisplay.textContent = formatSeconds(remainingTime)
 }
-// question currently on the screen for the user
+// question currently on the screen for the player
 var nextQuestionIndex
 // randomized questions array
 var randomizeQuestions
@@ -191,20 +218,20 @@ function displayQuestionPg() {
 
     questionsBox.innerHTML = ''
 
-    for (var i = 0; i < questions.length; i++) {
-        var qBox = document.createElement('span')
-        qBox.textContent = i + 1
-        questionsBox.appendChild(qBox)
+    for (let i = 0; i < questions.length; i++) {
+        var el = document.createElement('span')
+        el.textContent = i + 1
+        questionsBox.appendChild(el)
     }
 
     randomizeQuestions = randomizeArray(questions)
 
-    // reset calues to default
+    // reset values to 0/default
     nextQuestionIndex = 0
     score = 0
 
     // start timer
-    startTime()
+    startTimer()
 
     // Display 1st question
     displayNextQuestion()
@@ -213,7 +240,7 @@ function displayQuestionPg() {
 //function to display the next/following question
 function displayNextQuestion() {
     if (nextQuestionIndex < questions.length) {
-        // retrive questions and answers
+        // retrieve questions and answers
         const question = randomizeQuestions[nextQuestionIndex].question
         const answers = randomizeQuestions[nextQuestionIndex].answers
         const randomizedAnswers = randomizeArray(answers)
@@ -222,10 +249,10 @@ function displayNextQuestion() {
         questionDisplay.textContent = question
         answerList.innerHTML = ''
         answerFeedback.textContent = ''
-
-        for (var i = 0; i < randomizedAnswers.length; i++) {
-            var answer = randomizedAnswers[i]
-            var button = document.createElement('button')
+        //check for correct answer
+        for (let i = 0; i < randomizedAnswers.length; i++) {
+            let answer = randomizedAnswers[i]
+            let button = document.createElement('button')
             button.classList.add('answer')
             if (answer == correctAnswer)
                 button.classList.add('correct')
@@ -234,7 +261,7 @@ function displayNextQuestion() {
         }
         nextQuestionIndex++
     } else {
-        clearInterval(time)
+        clearInterval(timer)
         displayInitialsPage()
     }
 }
@@ -249,63 +276,40 @@ function displayInitialsPage() {
 
 // function for hiscores page display
 function displayHsPg() {
-    displayPage('score_display')
+    displayPage('hs_pg')
     questionsBox.innerHTML = ''
 
-    highscoreList.innerHTML = ''
+    hsList.innerHTML = ''
 
-    clearInterval(time)
+    clearInterval(timer)
 
     var highscores = JSON.parse(localStorage.getItem('highscores'))
 
     var i = 0
-    for (var key in highscores) {
+    for (const key in highscores) {
         i++
-        var highscore = highscores[key]
-        var hsEl = document.createElement('div')
+        let highscore = highscores[key]
+        var el = document.createElement('div')
 
-        var initials = highscore.initials.padEnd(3, '')
-        var playerScore = highscore.score.toString().padStart(3, '')
-        var timeRemaining = formatSeconds(highscore.timeRemaining)
-        hsEl.textContent = `${i}. ${initials} - Score: ${playerScore} - Time: ${timeRemaining}`
-        highscoreList.appendChild(hsEl)
+        let initials = highscore.initials.padEnd(3, '')
+        let playerScore = highscore.score.toString().padStart(3, '')
+        let timeRemaining = formatSeconds(highscore.timeRemaining)
+        el.textContent = `${i}. ${initials} - Score: ${playerScore} - Time: ${timeRemaining}`
+        hsList.appendChild(el)
     }
 }
 
 // function to randomize questions array
-function randomizeQuestions(array) {
+function randomizeArray(array) {
     clone = [...array]
     output = []
 
     while (clone.length > 0) {
-        var r = Math.floor(Math.random() * clone.length);
-        var i = clone.splice(r, 1)[0]
-        output.push[i]
+        let r = Math.floor(Math.random() * clone.length);
+        let i = clone.splice(r, 1)[0]
+        output.push(i)
     }
     return output
 }
 
-// timer function
-function startTime() {
-    remainingTime = startTime
-    timeDisplay.textContent = formatSeconds(remainingTime)
-
-    time = setInterval(function () {
-        remainingTime--
-        // if time runs out, end and bring the initals page up
-        if (remainingTime < 0) {
-            clearInterval(time)
-            displayInitialsPage()
-        } else {
-            timeDisplay.textContent = formatSeconds(remainingTime)
-        }
-    }, 1000)
-}
-
-// format time in seconds
-function formatSeconds(seconds) {
-    var m = Math.floor(seconds / 60).toString().padStart(2, '');
-    var s = (seconds % 60).toString().padStart(2, '0');
-    return `${m}:${s}`
-}
 startQuiz()
