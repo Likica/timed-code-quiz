@@ -64,7 +64,8 @@ a {
 header {
     display: inline-flex;
     justify-content: space-between;
-    padding: 0.5rem;
+    padding: 5px 5px;
+    max-width: 95%;
 }
 
 main {
